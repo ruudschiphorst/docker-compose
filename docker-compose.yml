@@ -6,18 +6,25 @@ services:
     volumes: ["postgres_volume:/var/lib/postgresql/data", "~/.ssh/github:/root/.ssh/id_rsa"]
     ports: ["5432:5432"]
     environment:
-      POSTGRES_PASSWORD: myMhrtc27WqdUZYTZHgwTfr9f3hWHPaReTQR5XrAwJCFTAzB5G8fdKskbeVfCP6JWwXqN3SUWTFaAGHRhM67SZxuDRM8LYEdvxeJtzujgtNqdksBnCWFfpGu3uBJWDyR
+      POSTGRES_PASSWORD: "${POSTGRES_PASS}"
       POSTGRES_DB: stempol_notes
       POSTGRES_HOST_AUTH_METHOD: "trust"
   auth_api:
     build: git@github.com:ruudschiphorst/stempol_auth_api.git
     image: politie/auth_api
     ports: ["8085:8085"]
+    environment:
+      KEYSTORE_PASS: "${KEYSTORE_PASS}"
+      JWT_SIGNING_KEY: "${JWT_SIGNING_KEY}"
     volumes: ["~/.ssh/github:/root/.ssh/id_rsa", "~/.ssh/github:/home/spring/.ssh/id_rsa" ]
   db_api:
     build: git@github.com:ruudschiphorst/stempol_db_api.git
     image: politie/db_api
     ports: ["8086:8086"]
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASS}"
+      KEYSTORE_PASS: "${KEYSTORE_PASS}"
+      JWT_SIGNING_KEY: "${JWT_SIGNING_KEY}"
     volumes: ["~/.ssh/github:/root/.ssh/id_rsa", "~/.ssh/github:/home/spring/.ssh/id_rsa" ]
     depends_on:
       - postgres
