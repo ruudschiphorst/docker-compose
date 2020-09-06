@@ -3,8 +3,6 @@ services:
   postgres:
     build: git@github.com:ruudschiphorst/stempol_postgres.git
     image: politie/postgres
-    volumes: ["postgres_volume:/var/lib/postgresql/data", "~/.ssh/github:/root/.ssh/id_rsa"]
-    ports: ["5432:5432"]
     environment:
       POSTGRES_PASSWORD: "${POSTGRES_PASS}"
       POSTGRES_DB: stempol_notes
@@ -16,7 +14,6 @@ services:
     environment:
       KEYSTORE_PASS: "${KEYSTORE_PASS}"
       JWT_SIGNING_KEY: "${JWT_SIGNING_KEY}"
-    volumes: ["~/.ssh/github:/root/.ssh/id_rsa", "~/.ssh/github:/home/spring/.ssh/id_rsa" ]
   db_api:
     build: git@github.com:ruudschiphorst/stempol_db_api.git
     image: politie/db_api
@@ -25,7 +22,6 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASS}"
       KEYSTORE_PASS: "${KEYSTORE_PASS}"
       JWT_SIGNING_KEY: "${JWT_SIGNING_KEY}"
-    volumes: ["~/.ssh/github:/root/.ssh/id_rsa", "~/.ssh/github:/home/spring/.ssh/id_rsa" ]
     depends_on:
       - postgres
 volumes:
